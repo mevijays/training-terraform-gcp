@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "mylab"
+    bucket = "mylab123"
     prefix = "terraform/state"
   }
   required_providers {
@@ -56,23 +56,37 @@ resource "google_compute_subnetwork" "subnet" {
     ip_cidr_range = "172.16.0.0/16"
   }
 }
-
-## VM instance
+// firewall
+resource "google_compute_firewall" "firewall" {
+  name    = "vijay-firewall-externalssh"
+  network = google_compute_network.vpc.name
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+  source_ranges = ["0.0.0.0/0"] # Not So Secure. Limit the Source Range
+  target_tags   = ["externalssh"]
+}
+// VM instance
 resource "google_service_account" "default" {
   account_id   = "first-compute"
   display_name = "Service Account"
 }
-
+resource "google_compute_address" "static" {
+   name    = "devserver-ip"
+   project = var.project_id
+   region  = var.region
+}
 resource "google_compute_instance" "default" {
   name         = "test"
-  machine_type = "e2-medium"
+  machine_type = "f1-micro"
   zone         = "us-central1-a"
 
-  tags = ["foo", "bar"]
+  tags = ["externalssh", "bar"]
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-9"
+      image = "debian-cloud/debian-11"
     }
   }
 
@@ -81,19 +95,25 @@ resource "google_compute_instance" "default" {
     subnetwork = google_compute_subnetwork.subnet.id
 
     access_config {
-      // Ephemeral public IP
+      // Ephemeral public IP if want static use bellow
+      nat_ip = google_compute_address.static.address
     }
   }
 
   metadata = {
-    foo = "bar"
+    ssh-keys = "vijay:${file("~/.ssh/id_rsa.pub")}"
   }
 
   metadata_startup_script = "echo hi > /test.txt"
+  provisioner "local-exec" {
+    command = "echo ${self.network_interface[0].network_ip}"
+  }
+  
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
     email  = google_service_account.default.email
     scopes = ["cloud-platform"]
   }
+
 }
