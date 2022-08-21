@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "krlab"
+    bucket = "mylab"
     prefix = "terraform/state"
   }
   required_providers {
@@ -13,7 +13,7 @@ terraform {
 
 # declare a vriable for region and project id
 variable "project_id" {
-  default     = "krlab-012"
+  default     = "project-dev-355909"
   description = "project id"
 }
 
@@ -26,7 +26,7 @@ variable "region" {
 provider "google" {
   project     = var.project_id
   region      = var.region
-  credentials = file("krlab-012-09334ebda940.json")
+  credentials = file("../../gcp-terraform-key.json")
 }
 
 

@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "krlab"
+    bucket = "mylab123"
     prefix = "terraform/state"
   }
   required_providers {

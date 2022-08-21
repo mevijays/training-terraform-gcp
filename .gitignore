@@ -1,10 +1,9 @@
 # Local .terraform directories
 **/.terraform/*
-
+gcp-terraform-key.json
 # .tfstate files
 *.tfstate
 *.tfstate.*
-krlab-012-09334ebda940.json
 # Crash log files
 crash.log
 

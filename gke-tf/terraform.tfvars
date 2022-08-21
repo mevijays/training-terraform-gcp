@@ -1,6 +1,6 @@
-project_id    = "krlab-012"
+project_id    = "project-dev-355909"
 region        = "us-central1"
-gke_username  = "vijay@mevijay.com"
-gke_password  = "redhat123"
+gke_username  = "vijay@mevijay.dev"
+gke_password  = "xxxxx"
 gke_num_nodes = 1
 machineType   = "e2-medium"

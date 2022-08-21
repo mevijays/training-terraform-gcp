@@ -1,46 +1,28 @@
-# Let's checkout this variable syntax
-variable "no_caps" {
-    type = string
-
-    validation {
-        condition = lower(var.no_caps) == var.no_caps
-        error_message = "Value must be in all lower case."
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "2.2.3"
     }
-
+  }
 }
 
-variable "always_wrong" {
-    type = string
+provider "local" {
+  # Configuration options
+}
 
+variable list {
+  type        = list
+  description = "description"
     validation {
-        condition = length(var.always_wrong) == length(var.always_wrong)
-        error_message = "You'll never get this right."
-    }
+    condition     = length(var.list) <= 2
+    error_message = "Error.. name list can accept only 2 names"
+  }
 }
 
-
-variable "ip_address" {
-    type = string
-
-    validation {
-        condition = can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$", var.ip_address))
-        error_message = "Must be an IP address of the form X.X.X.X."
-    }
+resource "local_file" "foo" {
+    for_each = toset(var.list)
+    content  = "foo! content is this ${each.key}"
+    filename = "${path.module}/foo${each.key}.bar"
 }
-
-
-module "default_variable" {
-    source = "./mock_mod"
-
-    my_str = var.no_caps
-    
-}
-
-
-output "ip_address" {
-    value = var.ip_address
-}
-
-output "no_caps" {
-    value = var.no_caps
-}
+~  
