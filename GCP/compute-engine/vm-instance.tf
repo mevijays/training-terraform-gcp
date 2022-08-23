@@ -102,6 +102,7 @@ resource "google_compute_instance" "default" {
 
   metadata = {
     ssh-keys = "vijay:${file("~/.ssh/id_rsa.pub")}"
+//  user-data = file("my_cloud_init.conf")
   }
 
   metadata_startup_script = "echo hi > /test.txt"

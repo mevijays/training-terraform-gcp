@@ -26,6 +26,13 @@ provider "google" {
   region      = var.region
   credentials = file("../../gcp-terraform-key.json")
 }
+// creating 2 vpcs
+
+resource "google_compute_network" "network" {
+  count                   = 2
+  name                    = "network-${count.index}"
+  auto_create_subnetworks = false
+}
 
 /*
 resource "google_dns_managed_zone" "private-zone" {
@@ -68,9 +75,4 @@ resource "google_dns_managed_zone" "private-zone" {
     }
    }
 }
-
-resource "google_compute_network" "network" {
-  count                   = 2
-  name                    = "network-${count.index}"
-  auto_create_subnetworks = false
-}
+*/
