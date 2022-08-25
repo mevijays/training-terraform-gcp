@@ -1,33 +1,18 @@
-# local api whitelisting
-locals {
-  cidr_blocks = concat(
-    [
-      {
-        display_name : "GKE Cluster CIDR",
-        cidr_block : format("%s/32", "192.168.0.10")
-      },
-      {
-        display_name : "GKE subnet",
-        cidr_block : format("%s/32", "192.168.0.12")
-      },
-      {
-        display_name : "home access",
-        cidr_block : format("%s/32", "103.149.126.200")
-      },
-    ]
-  )
+// service account for gke
+resource "google_service_account" "default" {
+  account_id   = "gke-sa"
+  display_name = "gke-sa"
 }
-
 resource "google_container_cluster" "primary" {
-  name                     = "${var.project_id}-gke"
+  name                     = "${var.cluster_name}-${random_id.randhex.hex}"
   location                 = var.region
   remove_default_node_pool = true
   initial_node_count       = 1
   ip_allocation_policy {
-    cluster_secondary_range_name  = google_compute_subnetwork.subnet.secondary_ip_range.0.range_name
-    services_secondary_range_name = google_compute_subnetwork.subnet.secondary_ip_range.1.range_name
+    cluster_ipv4_cidr_block  = var.pod_cidr
+    services_ipv4_cidr_block = var.svc_cidr
   }
-  network    = google_compute_network.vpc.name
+  network    = google_compute_network.gke_vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
   addons_config {
     horizontal_pod_autoscaling {
@@ -45,14 +30,7 @@ resource "google_container_cluster" "primary" {
     gce_persistent_disk_csi_driver_config {
       enabled = true
     }
-
   }
-  node_locations = [
-    "us-central1-a",
-    "us-central1-b",
-    "us-central1-c",
-  ]
-
   workload_identity_config {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
@@ -67,20 +45,16 @@ resource "google_container_cluster" "primary" {
       enabled = true
     }
   }
+
   master_authorized_networks_config {
     dynamic "cidr_blocks" {
-      for_each = [for cidr_block in local.cidr_blocks : {
-        display_name = cidr_block.display_name
-        cidr_block   = cidr_block.cidr_block
-      }]
+      for_each = var.authorized_ipv4_cidr_block
       content {
-        cidr_block   = cidr_blocks.value.cidr_block
-        display_name = cidr_blocks.value.display_name
-
+        cidr_block   = format("%s/32", cidr_blocks.value)
+        display_name = cidr_blocks.value
       }
     }
   }
-
 }
 
 # Separately Managed Node Pool
@@ -91,37 +65,16 @@ resource "google_container_node_pool" "primary_nodes" {
   node_count = var.gke_num_nodes
 
   autoscaling {
-    min_node_count = 2
-    max_node_count = 10
-  }
-  management {
-    auto_repair  = true
-    auto_upgrade = true
+    min_node_count = var.min_node
+    max_node_count = var.max_node
   }
   node_config {
-    labels = {
-      confidentiality = "C2"
-      managed_by      = "vijay"
-      environment     = "dev"
-    }
-    preemptible  = true
-    machine_type = var.machineType
+    preemptible     = true
+    machine_type    = var.node_size
+    service_account = google_service_account.default.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
-    tags = ["gke-node", "${var.project_id}-gke"]
+    tags = ["gke-node"]
   }
-}
-
-
-data "google_client_config" "default" {
-  depends_on = [google_container_cluster.primary]
-}
-data "google_container_cluster" "primary" {
-  name     = "${var.project_id}-gke"
-  location = var.region
-  depends_on = [
-    google_container_node_pool.primary_nodes,
-    google_container_cluster.primary
-  ]
 }

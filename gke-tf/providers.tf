@@ -1,18 +1,20 @@
 terraform {
   backend "gcs" {
-    bucket = "mylab123"
-    prefix = "terraform/state"
+    bucket = "gks-gke"
+    prefix = "tf/state/gke"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "4.30.0"
+      version = "4.33.0"
     }
   }
+}
+provider "random" {
 }
 
 provider "google" {
   project     = var.project_id
   region      = var.region
-  credentials = file("krlab-012-09334ebda940.json")
+  credentials = file("./terraform-sa.key")
 }
