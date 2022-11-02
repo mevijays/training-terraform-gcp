@@ -1,0 +1,117 @@
+#### Terraform Training Agenda 
+
+## Day-1
+- Agile vs waterfall in SDLC
+- Overview of infrastructure during SDLC?
+- Problems with many infrastructure tools?
+- Introducing Infrastructure as Code
+- Declarative vs. Imperative
+- Introduction of Terraform
+- Advantage & Disadvantage of Terraform
+- How Terraform works for Infrastructure as Code?
+- Alternative of Terraform
+- Terraform Use cases
+- Components in IaaC
+  - SCM github
+  - storage and versioning ( Block, file, objects)
+## Day-2
+- How to install Terraform?
+- Introductions of Terraform Components?
+    - Terraform Providers
+    - Terraform Registry
+    - Terraform Resources
+    - Terraform Resources Argument Reference
+- Deploying Your First Terraform Configuration
+- Terraform Basics Workflow using Terraform CLI
+  - terraform validate
+  - terraform init
+  - terraform plan
+  - terraform apply
+  - terraform show
+  - terraform detroy
+## Day-3
+- Updating Your Configuration with More Resources
+- Configuring a Resource After Creation
+- Adding a New Provider to Your Configuration
+- Undertanding Terraform state file
+- Terraform Resource Behavior & Lifecycle
+- Undertanding Terraform HCL syntax & Style
+- Terraform Resources Meta-Argument
+        - depends_on
+        - count
+        - for_each
+        - provider
+        - lifecycle
+## Day-4
+- Cloud 
+  - orchestration
+  - networking subnets and CIDR.
+  - storage
+  - compute
+- Using Terraform for Create Cloud Provider Compute Resources
+- Introduction of Terraform Variables & Values
+  - Input Variables
+  - Output Values
+  - Local Values
+- Where to declare a Terraform Input Variables?
+- Deep dive into Types of Terraform Input Variables
+  - string
+  - number
+  - bool
+  - list
+  - set
+  - map
+  - object
+  - tuple
+## Day-5
+- How to access Terraform Input Variables value?
+- Terraform Input Variables precedence & Scope
+- Working with Terraform Output Values
+- Working with Terraform Local Values
+- Introduction of Terraform Data sources?
+- Accessing Terraform Data sources?
+- Working with Terraform HCL Operators
+- Overview of Terraform Functions
+- Working with Terraform Functions
+  - Numeric Functions
+  - String Functions
+  - Collection Functions
+  - Encoding Functions
+  - Filesystem Functions
+  - Date and Time Functions
+  - Hash and Crypto Functions
+  - IP Network Functions
+  - Type Conversion Functions
+### Day-6
+- Introducing Terraform Provisioners
+- Working with Terraform Provisioners
+  - file
+  - local-exec
+  - remote-exec
+- Using Terraform for Create Cloud Provider Storage & Networking Resources
+- Containers and kubernetes
+- cloud kubernetes provider
+- github provider
+### Day-7
+- Terraform module
+- Terraform workspaces
+- Terraform remote state managment
+- Terraform secrets managment
+- Working with Terraform Templates
+- Working with Workspaces for multiple environments
+- Working with Remote Backend for managing State file for team
+  - artifactory
+  - s3
+  - azurerm
+  - gcs
+- Understanding Terraform State locking
+### Day-8
+- Terraform Troubleshooting using logs & common errors
+- Introducing Terraform Module
+- Using with Terraform Module from Registry
+- Developing Custom Terraform Module
+- Publishing Modules on the Terraform Registry
+- Introducing Terraform Console
+- Introducing Terraform Tags
+- Introducing Terraform Cloud
+- Using Terraform for use Multiple providers for CI/CD
