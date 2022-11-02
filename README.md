@@ -1,2 +1,3 @@
-# training-terraform-gcp
-terraform gcp GKE training
+# Training-terraform-gcp
+## Terraform training
+- [Training Agenda](agenda.md)
