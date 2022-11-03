@@ -37,11 +37,11 @@
 - Terraform Resource Behavior & Lifecycle
 - Undertanding Terraform HCL syntax & Style
 - Terraform Resources Meta-Argument
-        - depends_on
-        - count
-        - for_each
-        - provider
-        - lifecycle
+  - depends_on
+  - count
+  - for_each
+  - provider
+  - lifecycle
 ## Day-4
 - Cloud 
   - orchestration
